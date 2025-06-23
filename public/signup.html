@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Signup</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background: #f0f0f0;
+      }
+      .container {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+      }
+      h2 {
+        text-align: center;
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+      }
+      input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      button {
+        width: 100%;
+        padding: 10px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      .message {
+        text-align: center;
+        margin-top: 10px;
+      }
+      @media (max-width: 600px) {
+        .container {
+          padding: 15px;
+          max-width: 90%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Signup</h2>
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" required />
+      </div>
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" required />
+      </div>
+      <button onclick="signup()">Signup</button>
+      <p class="message" id="message"></p>
+      <p class="message">
+        Already have an account? <a href="/login.html">Login</a>
+      </p>
+    </div>
+    <script>
+      async function signup() {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const message = document.getElementById("message");
+        try {
+          const response = await fetch("/api/auth/signup", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+          });
+          const data = await response.json();
+          if (response.ok) {
+            message.style.color = "green";
+            message.textContent = "Signup successful! Redirecting to login...";
+            setTimeout(() => (window.location.href = "/login.html"), 2000);
+          } else {
+            message.style.color = "red";
+            message.textContent = data.error;
+          }
+        } catch (error) {
+          message.style.color = "red";
+          message.textContent = "An error occurred";
+        }
+      }
+    </script>
+  </body>
+</html>
